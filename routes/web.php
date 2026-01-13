@@ -1,40 +1,37 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PetugasController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\Petugas\BarangController as PetugasBarangController;
+use App\Http\Controllers\Petugas\PembelianController as PetugasPembelianController;
+use App\Http\Controllers\Petugas\PenjualanController as PetugasPenjualanController;
+use App\Http\Controllers\Petugas\LaporanController as PetugasLaporanController;
+use App\Http\Controllers\Customer\PenjualanController as CustomerPenjualanController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Landing Page (Root)
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+// Profile routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Auth routes (login, register, dll)
 require __DIR__.'/auth.php';
-
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\PetugasController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\BarangController;
-use App\Http\Controllers\Petugas\BarangController as PetugasBarangController;
-use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\SatuanController;
-
-use App\Http\Controllers\UserController;
-
-use App\Http\Controllers\PembelianController;
-use App\Http\Controllers\Petugas\PembelianController as PetugasPembelianController;
-
-use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\Petugas\LaporanController as PetugasLaporanController;
 
 // Route untuk Admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -46,7 +43,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('user', UserController::class);
     Route::resource('pembelian', PembelianController::class)->except(['edit', 'update']);
     
-    // Routes Laporan (TAMBAHKAN INI)
+    // Penjualan
+    Route::resource('penjualan', PenjualanController::class)->only(['index', 'show']);
+    Route::post('penjualan/{penjualan}/update-status', [PenjualanController::class, 'updateStatus'])->name('penjualan.update-status');
+    
+    // Laporan
     Route::prefix('laporan')->name('laporan.')->group(function () {
         Route::get('/', [LaporanController::class, 'index'])->name('index');
         Route::get('/stok-barang', [LaporanController::class, 'stokBarang'])->name('stok-barang');
@@ -62,7 +63,11 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')
     Route::resource('barang', PetugasBarangController::class);
     Route::resource('pembelian', PetugasPembelianController::class)->except(['edit', 'update']);
     
-    // Routes Laporan (TAMBAHKAN INI)
+    // Penjualan
+    Route::resource('penjualan', PetugasPenjualanController::class)->only(['index', 'show']);
+    Route::post('penjualan/{penjualan}/update-status', [PetugasPenjualanController::class, 'updateStatus'])->name('penjualan.update-status');
+    
+    // Laporan
     Route::prefix('laporan')->name('laporan.')->group(function () {
         Route::get('/', [PetugasLaporanController::class, 'index'])->name('index');
         Route::get('/stok-barang', [PetugasLaporanController::class, 'stokBarang'])->name('stok-barang');
@@ -75,4 +80,11 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')
 // Route untuk Customer
 Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/katalog', [CustomerController::class, 'katalog'])->name('katalog');
+    
+    // Pesanan
+    Route::get('/pesanan', [CustomerPenjualanController::class, 'index'])->name('pesanan.index');
+    Route::get('/pesanan/create/{barang}', [CustomerPenjualanController::class, 'create'])->name('pesanan.create');
+    Route::post('/pesanan', [CustomerPenjualanController::class, 'store'])->name('pesanan.store');
+    Route::get('/pesanan/{penjualan}', [CustomerPenjualanController::class, 'show'])->name('pesanan.show');
+    Route::post('/pesanan/{penjualan}/cancel', [CustomerPenjualanController::class, 'cancel'])->name('pesanan.cancel');
 });

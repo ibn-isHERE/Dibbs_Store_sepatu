@@ -42,13 +42,15 @@
     @forelse($barangs as $barang)
     <div class="col-md-3 mb-4">
         <div class="card h-100 shadow-sm">
-            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                @if($barang->gambar)
-                    <img src="{{ asset('storage/'.$barang->gambar) }}" alt="{{ $barang->nama_barang }}" class="img-fluid">
-                @else
-                    <i class="bi bi-image" style="font-size: 4rem; color: #ccc;"></i>
-                @endif
-            </div>
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px; overflow: hidden;">
+    @if($barang->gambar)
+        <img src="{{ asset('storage/'.$barang->gambar) }}" 
+             alt="{{ $barang->nama_barang }}" 
+             style="width: 100%; height: 100%; object-fit: cover;">
+    @else
+        <i class="bi bi-image" style="font-size: 4rem; color: #ccc;"></i>
+    @endif
+</div>
             <div class="card-body">
                 <span class="badge bg-primary mb-2">{{ $barang->kategori->nama_kategori }}</span>
                 <h5 class="card-title">{{ $barang->nama_barang }}</h5>
@@ -66,14 +68,14 @@
             </div>
             <div class="card-footer bg-white">
                 @if($barang->stok > 0)
-                    <button class="btn btn-success w-100">
-                        <i class="bi bi-cart-plus"></i> Pesan Sekarang
-                    </button>
-                @else
-                    <button class="btn btn-secondary w-100" disabled>
-                        <i class="bi bi-x-circle"></i> Stok Habis
-                    </button>
-                @endif
+    <a href="{{ route('customer.pesanan.create', $barang->id) }}" class="btn btn-success w-100">
+        <i class="bi bi-cart-plus"></i> Pesan Sekarang
+    </a>
+@else
+    <button class="btn btn-secondary w-100" disabled>
+        <i class="bi bi-x-circle"></i> Stok Habis
+    </button>
+@endif
             </div>
         </div>
     </div>

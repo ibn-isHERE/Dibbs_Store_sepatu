@@ -6,13 +6,168 @@
     <title>@yield('title') - Dibbs Store Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white !important;
+            letter-spacing: -0.3px;
+        }
+
+        .navbar-brand i {
+            font-size: 1.4rem;
+            margin-right: 8px;
+        }
+
+        .navbar .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .navbar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white !important;
+        }
+
+        .navbar .nav-link i {
+            margin-right: 6px;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-item {
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            transition: all 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f9ff;
+            color: #0ea5e9;
+        }
+
+        .dropdown-item i {
+            margin-right: 8px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: white;
+            min-height: calc(100vh - 72px);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+            padding: 0;
+        }
+
+        .sidebar .nav-link {
+            color: #64748b;
+            padding: 1rem 1.5rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar .nav-link:hover {
+            background: #f0f9ff;
+            color: #0ea5e9;
+            border-left-color: #0ea5e9;
+        }
+
+        .sidebar .nav-link.active {
+            background: linear-gradient(90deg, #e0f2fe 0%, transparent 100%);
+            color: #0ea5e9;
+            border-left-color: #0ea5e9;
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .sidebar .nav-link .bi-chevron-down {
+            font-size: 0.9rem;
+            transition: transform 0.3s;
+        }
+
+        .sidebar .nav-link[aria-expanded="true"] .bi-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        /* Submenu Styles */
+        .sidebar .collapse .nav-link {
+            padding: 0.8rem 1.5rem 0.8rem 2.5rem;
+            font-size: 0.9rem;
+        }
+
+        .sidebar .collapse .nav-link i {
+            font-size: 1rem;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
-                <i class="bi bi-shop"></i> Dibbs Store - Admin
+                <i class="bi bi-shop"></i> Dibbs Store
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -48,74 +203,75 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav class="col-md-2 d-md-block bg-light sidebar">
+            <nav class="col-md-2 d-md-block sidebar">
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
-    <li class="nav-item">
-        <a class="nav-link active" href="{{ route('admin.dashboard') }}">
-            <i class="bi bi-speedometer2"></i> Dashboard
-        </a>
-    </li>
-    
-    <!-- Master Data Dropdown -->
-    <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#masterDataCollapse" role="button">
-            <i class="bi bi-database"></i> Master Data <i class="bi bi-chevron-down float-end"></i>
-        </a>
-        <div class="collapse" id="masterDataCollapse">
-            <ul class="nav flex-column ms-3">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.kategori.index') }}">
-                        <i class="bi bi-tags"></i> Kategori
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.satuan.index') }}">
-                        <i class="bi bi-rulers"></i> Satuan
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.supplier.index') }}">
-                        <i class="bi bi-truck"></i> Supplier
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </li>
-    
-    <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.user.index') }}">
-        <i class="bi bi-people"></i> Kelola User
-    </a>
-</li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('admin.barang.index') }}">
-            <i class="bi bi-box-seam"></i> Data Barang
-        </a>
-    </li>
-    <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.pembelian.index') }}">
-        <i class="bi bi-cart-plus"></i> Pembelian Stok
-    </a>
-</li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="bi bi-receipt"></i> Data Penjualan
-        </a>
-    </li>
-    <li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.laporan.index') }}">
-        <i class="bi bi-file-earmark-text"></i> Laporan
-    </a>
-</li>
-</ul>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('admin.dashboard') }}">
+                                <span><i class="bi bi-speedometer2"></i> Dashboard</span>
+                            </a>
+                        </li>
+                        
+                        <!-- Master Data Dropdown -->
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#masterDataCollapse" role="button">
+                                <span><i class="bi bi-database"></i> Master Data</span>
+                                <i class="bi bi-chevron-down"></i>
+                            </a>
+                            <div class="collapse" id="masterDataCollapse">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.kategori.index') }}">
+                                            <span><i class="bi bi-tags"></i> Kategori</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.satuan.index') }}">
+                                            <span><i class="bi bi-rulers"></i> Satuan</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.supplier.index') }}">
+                                            <span><i class="bi bi-truck"></i> Supplier</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.user.index') }}">
+                                <span><i class="bi bi-people"></i> Kelola User</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.barang.index') }}">
+                                <span><i class="bi bi-box-seam"></i> Data Barang</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.pembelian.index') }}">
+                                <span><i class="bi bi-cart-plus"></i> Pembelian Stok</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.penjualan.index') }}">
+                                <span><i class="bi bi-receipt"></i> Data Penjualan</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.laporan.index') }}">
+                                <span><i class="bi bi-file-earmark-text"></i> Laporan</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
 
             <!-- Main Content -->
-            <main class="col-md-10 ms-sm-auto px-md-4">
-                <div class="pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">@yield('title')</h1>
+            <main class="col-md-10 ms-sm-auto">
+                <div class="page-header">
+                    <h1>@yield('title')</h1>
                 </div>
                 @yield('content')
             </main>
